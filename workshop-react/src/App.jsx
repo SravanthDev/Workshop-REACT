@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import './App.css';
+import PocketBaseConnectionCreator from 'pocketbase';
+
+const pb = new PocketBaseConnectionCreator('http://127.0.0.1:8090');
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function getData() {
+      try {
+        const records = await pb.collection('Categories').getFullList();
+        console.log(records);
+        setData(records);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    }
+
+    getData();
+  }, []); 
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Expenss Manager</h1>
+      <table className='table'>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Item Description</th>
+            <th>Current Balance</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Type of Transaction</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.item_description}</td>
+              <td>{item.Current_Balance_Amount}</td>
+              <td>{item.Debit}</td>
+              <td>{item.Credit}</td>
+              <td>{item.Type_of_transaction}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
+
