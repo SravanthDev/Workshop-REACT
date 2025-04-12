@@ -1,48 +1,35 @@
-import React, { useEffect, useState } from "react";
-import PocketBase from "pocketbase";
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
-const pb = new PocketBase("http://127.0.0.1:8090", { autoCancel: false });
+function App() {
+  const [count, setCount] = useState(0)
 
-const App = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-        const records = await pb.collection("categories").getList();
-        setData(records.items);
-    };
-    fetchData();
-  }, []);
-3
   return (
-    <div>
-      <h1>Expenses</h1>
-      {data.length > 0 ? (
-        <table border="1" >
-          <thead>
-            <tr>
-              {Object.keys(data[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item) => (
-              <tr key={item.id}>
-                {Object.values(item).map((value, index) => (
-                  <td key={index}>
-                    {value !== null ? value.toString() : ""}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>Loading data...</p>
-      )}
-    </div>
-  );
-};
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.jsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
+}
 
-export default App;
+export default App
